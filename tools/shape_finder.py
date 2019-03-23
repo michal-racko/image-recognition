@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from sklearn.cluster import AffinityPropagation, DBSCAN
+
 
 class PointFinder(object):
     """
@@ -38,3 +40,18 @@ class PointFinder(object):
             y_coords.append(int(mom['m01'] / mom['m00']))
 
         return np.vstack((np.array(x_coords), np.array(y_coords))).T
+
+
+class PlayerFinder(object):
+    def __init__(self,
+                 training_frame=None):
+        self.clusterrer = AffinityPropagation()
+
+    def cluster(self,
+                coords: np.ndarray):
+        if len(coords) == 0:
+            return []
+
+        self.clusterrer.fit(coords)
+
+        return self.clusterrer.cluster_centers_

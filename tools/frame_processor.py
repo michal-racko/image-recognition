@@ -27,7 +27,7 @@ class Preprocessor(FrameProcessor):
     """
 
     def __init__(self,
-                 kernel=(5, 5)):
+                 kernel=(9, 9)):
         super().__init__()
 
         self.kernel = kernel
@@ -63,3 +63,34 @@ class ColorMask(FrameProcessor):
         hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
 
         return cv2.inRange(hsv, self.min_hsv, self.max_hsv)
+
+
+class Movement(FrameProcessor):
+    """
+    Returns an image with nonzero values where objects have changed
+    """
+
+    def __init__(self):
+        super().__init__()
+
+        self.prior_frame = None
+
+        self.delay = 2  # n frames
+        self.i = 0
+
+    def get_results(self):
+        if self.prior_frame is None:  # return a white mask if first frame
+            diff = cv2.inRange(self.frame,
+                               np.array([0, 0, 0]),
+                               np.array([180, 255, 255]))
+
+        else:
+            diff = cv2.subtract(self.frame,
+                                self.prior_frame)
+        if self.i == self.delay:
+            self.prior_frame = self.frame
+            self.i = 0
+        else:
+            self.i += 1
+
+        return diff

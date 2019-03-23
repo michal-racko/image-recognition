@@ -62,7 +62,14 @@ class ColorMask(FrameProcessor):
 
         hsv = cv2.cvtColor(self.frame, cv2.COLOR_BGR2HSV)
 
-        return cv2.inRange(hsv, self.min_hsv, self.max_hsv)
+        mask = cv2.inRange(hsv, self.min_hsv, self.max_hsv)
+
+        kernel = np.ones((5, 5), np.uint8)
+
+        mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+        mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
+        return mask
 
 
 class Movement(FrameProcessor):

@@ -27,7 +27,7 @@ class Preprocessor(FrameProcessor):
     """
 
     def __init__(self,
-                 kernel=(9, 9)):
+                 kernel=(3, 3)):
         super().__init__()
 
         self.kernel = kernel
@@ -64,7 +64,7 @@ class ColorMask(FrameProcessor):
 
         mask = cv2.inRange(hsv, self.min_hsv, self.max_hsv)
 
-        kernel = np.ones((5, 5), np.uint8)
+        kernel = np.ones((2, 2), np.uint8)
 
         mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
         mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)

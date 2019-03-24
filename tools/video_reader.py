@@ -9,7 +9,7 @@ class VideoReader(object):
 
     def __init__(self,
                  filepath: str,
-                 scaling_factor=2):
+                 scaling_factor=1):
         self.cap = cv2.VideoCapture(filepath)
 
         self.scaling_factor = scaling_factor

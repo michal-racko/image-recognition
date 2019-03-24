@@ -1,16 +1,36 @@
 {
-    "n_steps": 50,
-    "groups":
-    {
-        "blue" :
-        {
-            "min_hsv": [70, 40, 160],
-            "max_hsv": [120, 255, 255]
+    "n_steps": 10,
+    "preview": {
+        "show": true,
+        "target": true,
+        "players": false,
+        "target_vector": false,
+        "points": false
+    },
+    "groups": {
+        "blue": {
+            "min_hsv": [
+                70,
+                40,
+                160
+            ],
+            "max_hsv": [
+                120,
+                255,
+                255
+            ]
         },
-        "green" :
-        {
-            "min_hsv": [70, 40, 160],
-            "max_hsv": [120, 255, 255]
+        "green": {
+            "min_hsv": [
+                40,
+                50,
+                150
+            ],
+            "max_hsv": [
+                55,
+                255,
+                255
+            ]
         }
     }
 }

@@ -23,7 +23,12 @@ class Interface(object):
         self.player_coords = None
         self.target_coords = None
 
+        self.global_coords = np.zeros(2)
+
+        self.current_phi_direction = 1
+
         self.config = None
+        self.preview = None
 
         self.known_groups = None
 
@@ -33,8 +38,8 @@ class Interface(object):
 
         self.show_points = False  # All points which passed the mask
         self.show_players = False  # All players found
-        self.show_target = True  # The player to be targeted
-        self.show_motion_vector = True  # Show which direction to point the camera
+        self.show_target = False  # The player to be targeted
+        self.show_target_vector = False  # Show which direction to point the camera
 
     def set_frame(self, frame):
         self.frame = frame
@@ -54,6 +59,9 @@ class Interface(object):
             self.config = json.loads(json_string)
 
         self.known_groups = self.config['groups']
+
+        if 'preview' in self.config:
+            self.preview = self.config['preview']
 
     def set_target_group(self, group_name: str):
         """
@@ -95,33 +103,66 @@ class Interface(object):
         """
         self.target_coords = self.target_finder.search(self.player_coords)
 
+    def _search_target(self):
+        """
+        Returns coordinates of searching motion if no targed found.
+        """
+        if self.global_coords[1] == 0:
+            theta_motion = 0
+        else:
+            theta_motion = - int(self.global_coords[1] /
+                                self.global_coords[1] * self.config['n_steps'])
+
+        if theta_motion + self.global_coords[1] < 0:
+            theta_motion = - self.global_coords[1]
+
+        phi_motion = self.current_phi_direction * self.config['n_steps']
+
+        return np.array([phi_motion, theta_motion])
+
+    def change_azimuthal_direction(self):
+        """
+        Changes the azimuthal direction in which the camera moves.
+        """
+        self.current_phi_direction = - self.current_phi_direction
+
     def get_target_coordinates(self) -> np.ndarray:
         if not self.target_group_set:
             raise Exception('Target group must be defined first')
+
+        if self.preview and self.preview['show']:
+            self._show_results()
+
+            self.show_points = self.preview['points']
+            self.show_players = self.preview['players']
+            self.show_target = self.preview['target']
+            self.show_target_vector = self.preview['target_vector']
 
         self._find_players()
         self._find_target()
 
         if self.target_coords is None or len(self.target_coords) == 0:
             self.target_coords = None
-            return []
 
-        target_motion_vector = np.array([
-            self.target_coords[0] - self.centre_coords[0],
-            self.centre_coords[1] - self.target_coords[1]
-        ])
+            motion_vector = self._search_target()
 
-        target_motion_vector = target_motion_vector / \
-            np.sqrt(sum(target_motion_vector ** 2))
+        else:
+            motion_vector = np.array([
+                self.target_coords[0] - self.centre_coords[0],
+                self.centre_coords[1] - self.target_coords[1]
+            ])
 
-        n_steps = self.config['n_steps']
+            motion_vector = motion_vector / \
+                np.sqrt(sum(motion_vector ** 2))
 
-        target_motion_vector[0] = int(target_motion_vector[0] * n_steps)
-        target_motion_vector[1] = int(target_motion_vector[1] * n_steps)
+            motion_vector[0] = int(motion_vector[0] * self.config['n_steps'])
+            motion_vector[1] = int(motion_vector[1] * self.config['n_steps'])
 
-        return target_motion_vector
+        self.global_coords += motion_vector
 
-    def show_results(self):
+        return motion_vector
+
+    def _show_results(self):
         """
         Shows results in the current frame.
         """
@@ -137,10 +178,8 @@ class Interface(object):
             cv2.circle(
                 self.frame, (self.target_coords[0], self.target_coords[1]), 25, (0, 0, 255), 2)
 
-        if self.show_motion_vector and self.target_coords is not None:
+        if self.show_target_vector and self.target_coords is not None:
             cv2.line(self.frame, (self.centre_coords[0], self.centre_coords[1]),
                      (self.target_coords[0], self.target_coords[1]), (0, 0, 255), 2)
-
-        cv2.circle(self.frame, (0, 0), 25, (0, 255, 0), -1)
 
         cv2.imshow('Targeting', self.frame)

@@ -17,8 +17,6 @@ show_target = True
 if __name__ == '__main__':
     video = VideoReader(video_path)
 
-    first_frame = next(video)
-
     preprocessor = Preprocessor()
 
     color_mask = ColorMask()
@@ -31,7 +29,7 @@ if __name__ == '__main__':
 
     point_finder = PointFinder()
     player_finder = PlayerFinder()
-    target_finder = TargetFinder(first_frame.shape[0], first_frame.shape[1])
+    target_finder = TargetFinder()
 
     for frame in video:
         preprocessor.set_frame(frame)

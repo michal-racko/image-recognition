@@ -4,11 +4,8 @@ from scipy import spatial
 
 
 class TargetFinder(object):
-    def __init__(self,
-                 image_size_x: int,
-                 image_size_y: int):
-        self.last_target = np.array(
-            [int(image_size_x / 2.), int(image_size_y / 2.)])
+    def __init__(self):
+        self.last_target = np.zeros(2)
 
     def search(self,
                coords: np.ndarray):

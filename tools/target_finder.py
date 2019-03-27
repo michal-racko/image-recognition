@@ -12,6 +12,9 @@ class TargetFinder(object):
         if len(coords) == 0:
             return []
 
+        if len(coords.shape) != 2:
+            return []
+
         tree = spatial.KDTree(coords)
 
         dist, indices = tree.query(self.last_target)

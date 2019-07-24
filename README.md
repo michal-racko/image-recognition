@@ -13,6 +13,7 @@ Config options:
 `n_steps`   - number of servo-motor steps done in one go
 
 `preview`:  - preview options
+
 `show`          - show video on the monitor
 `target`        - show targets found
 `players`       - show players found

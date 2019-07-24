@@ -12,12 +12,12 @@ Config options:
 
 `n_steps`   - number of servo-motor steps done in one go
 
-`preview`:  - preview options\n
-            `show`          - show video on the monitor
-            `target`        - show targets found
-            `players`       - show players found
-            `target_vector` - show direction to the closest target
-            `points`        - show points corresponding to player's LEDs
+`preview`:  - preview options
+`show`          - show video on the monitor
+`target`        - show targets found
+`players`       - show players found
+`target_vector` - show direction to the closest target
+`points`        - show points corresponding to player's LEDs
 
 `groups`:   - player group definitions
             `<group_name>`:

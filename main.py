@@ -26,7 +26,7 @@ def run():
     for frame in video:
         interface.set_frame(frame)
 
-        target_coords = interface.get_target_coordinates()
+        interface.get_target_coordinates()
 
         if abs(interface.global_coords[0]) >= 700:
             interface.change_azimuthal_direction()
@@ -34,6 +34,9 @@ def run():
         cv2.waitKey(80)
 
         root.update()
+
+
+# button functions (geoups must be defined in the config file):
 
 
 def select_blue():
@@ -49,11 +52,11 @@ def select_green():
 
 
 if __name__ == '__main__':
-    # zatial len zakladne GUI s tlacitkom na
+    # Basic GUI:
     select_blue()
 
     myBtn = tk.Button(root, bd=5, text="Open the program", command=run)
-    myBtn.grid()  # otvorenie programu a vybratie farby
+    myBtn.grid()
 
     config = interface.config
 

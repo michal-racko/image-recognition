@@ -23,7 +23,8 @@ class FrameProcessor(object):
 
 class Preprocessor(FrameProcessor):
     """
-    Performs first changes to the frame
+    Performs first changes to the frame:
+        gaussian blur -> to prevent noise from firing up the detection
     """
 
     def __init__(self,
@@ -74,7 +75,8 @@ class ColorMask(FrameProcessor):
 
 class Movement(FrameProcessor):
     """
-    Returns an image with nonzero values where objects have changed
+    Returns a mask image with nonzero 
+    values where objects have changed
     """
 
     def __init__(self):

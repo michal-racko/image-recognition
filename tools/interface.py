@@ -10,6 +10,10 @@ from tools.target_finder import TargetFinder
 
 
 class Interface(object):
+    """
+    Combines all tools into a functioning target finder.
+    """
+
     def __init__(self):
         self.frame = None
 
@@ -111,7 +115,7 @@ class Interface(object):
             theta_motion = 0
         else:
             theta_motion = - int(self.global_coords[1] /
-                                self.global_coords[1] * self.config['n_steps'])
+                                 self.global_coords[1] * self.config['n_steps'])
 
         if theta_motion + self.global_coords[1] < 0:
             theta_motion = - self.global_coords[1]
